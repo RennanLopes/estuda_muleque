@@ -1,0 +1,33 @@
+# Wails build artifacts
+build/bin/
+frontend/dist/
+frontend/wailsjs/
+
+# Dependencies
+frontend/node_modules/
+node_modules/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Go specific
+vendor/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Secret/Config files
+build/bin/config.json
+.env
+.env.*
+!.env.example

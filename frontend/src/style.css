@@ -1,0 +1,107 @@
+:root {
+  --primary: #4a90e2;
+  --secondary: #f39c12;
+  --success: #2ecc71;
+  --error: #e74c3c;
+  --bg: #2c3e50;
+  --text: #ffffff;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#app {
+  width: 100%;
+  max-width: 800px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  backdrop-filter: blur(10px);
+}
+
+h1 {
+  font-size: 3rem;
+  color: var(--secondary);
+  margin-bottom: 1rem;
+}
+
+.subject {
+    font-weight: bold;
+    color: var(--secondary);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+.question-text {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  min-height: 80px;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+button {
+  padding: 1rem;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+  background: var(--primary);
+  color: white;
+}
+
+button:hover:not(:disabled) {
+  transform: scale(1.05);
+  background: #357abd;
+}
+
+button.correct {
+  background: var(--success) !important;
+}
+
+button.wrong {
+  background: var(--error) !important;
+}
+
+button:disabled {
+    cursor: default;
+    opacity: 0.8;
+}
+
+.progress {
+  margin-top: 2rem;
+  font-size: 1.2rem;
+}
+
+.warning {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--error);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  z-index: 1000;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
