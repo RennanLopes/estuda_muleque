@@ -144,13 +144,32 @@ func (a *App) GetQuestions(count int) ([]Question, error) {
 	defer client.Close()
 
 	model := client.GenerativeModel("gemini-2.5-flash")
-	model.SetTemperature(0.7)
+	model.SetTemperature(0.9)
 	model.ResponseMIMEType = "application/json"
 
-	prompt := fmt.Sprintf(`Gere %d perguntas de múltipla escolha para uma criança de 8 anos em Português. 
-	As matérias devem ser: Matemática, Ciências, História, Inglês e Curiosidades.
-	O nível de dificuldade deve ser fácil a médio.
-	Retorne um objeto JSON com uma chave "questions" contendo um array de objetos com os campos: "question" (string), "options" (array de 4 strings), "answer" (index 0-3 da opção correta) e "subject" (string).`, count)
+	history := a.loadHistory()
+	historyContext := ""
+	if len(history) > 0 {
+		// Pega as últimas 50 para não estourar o contexto
+		start := 0
+		if len(history) > 50 {
+			start = len(history) - 50
+		}
+		historyContext = "IMPORTANTE: NÃO gere perguntas repetidas. Abaixo estão as perguntas que JÁ FORAM FEITAS recentemente. Crie perguntas COMPLETAMENTE diferentes:\n- " + strings.Join(history[start:], "\n- ")
+	}
+
+	prompt := fmt.Sprintf(`Gere %d perguntas de múltipla escolha inéditas, criativas e variadas para uma criança de 8 anos em Português.
+	As matérias devem ser: Matemática, Ciências, História, Geografia, Português, Inglês e Curiosidades.
+	O nível de dificuldade deve ser médio.
+	
+	Instruções de Variedade:
+	- Explore sub-temas diversos em cada matéria.
+	- Varie os objetos, nomes e contextos usados nos problemas.
+	- Evite perguntas clichês e óbvias.
+	
+	%s
+	
+	Retorne um objeto JSON com uma chave "questions" contendo um array de objetos com os campos: "question" (string), "options" (array de 4 strings), "answer" (index 0-3 da opção correta) e "subject" (string).`, count, historyContext)
 
 	fmt.Println("Calling Gemini API...")
 	resp, err := model.GenerateContent(ctx, genai.Text(prompt))
@@ -201,7 +220,39 @@ func (a *App) GetQuestions(count int) ([]Question, error) {
 	}
 
 	fmt.Printf("SUCCESS: Loaded %d questions from Gemini\n", len(result.Questions))
+	a.saveHistory(result.Questions)
 	return result.Questions, nil
+}
+
+func (a *App) getHistoryPath() string {
+	exePath, _ := os.Executable()
+	return filepath.Join(filepath.Dir(exePath), "history.json")
+}
+
+func (a *App) loadHistory() []string {
+	path := a.getHistoryPath()
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return []string{}
+	}
+	var history []string
+	if err := json.Unmarshal(data, &history); err != nil {
+		return []string{}
+	}
+	return history
+}
+
+func (a *App) saveHistory(newQuestions []Question) {
+	history := a.loadHistory()
+	for _, q := range newQuestions {
+		history = append(history, q.Text)
+	}
+	// Mantém apenas as últimas 100 perguntas para não sobrecarregar o prompt
+	if len(history) > 100 {
+		history = history[len(history)-100:]
+	}
+	data, _ := json.MarshalIndent(history, "", "  ")
+	os.WriteFile(a.getHistoryPath(), data, 0644)
 }
 
 func getDummyQuestions(count int) []Question {

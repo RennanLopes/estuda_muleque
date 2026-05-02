@@ -5,7 +5,7 @@ import { EventsOn } from '../wailsjs/runtime/runtime';
 let questions = [];
 let currentIndex = 0;
 let totalScore = 0;
-const TARGET_SCORE = 15;
+const TARGET_SCORE = 25;
 
 const app = document.getElementById('app');
 
@@ -22,7 +22,7 @@ EventsOn('show_warning', (msg) => {
 });
 
 async function init() {
-    await startRound(20);
+    await startRound(30);
 }
 
 async function startRound(count) {
@@ -101,12 +101,12 @@ function showResults() {
             <div class="card">
                 <h1>Quase lá!</h1>
                 <p>Você acertou ${totalScore} perguntas, mas precisa de ${TARGET_SCORE} para liberar o computador.</p>
-                <p>Vamos tentar mais 15 perguntas?</p>
+                <p>Vamos tentar mais 30 perguntas?</p>
                 <button id="more-btn">Continuar Desafio</button>
             </div>
         `;
         document.getElementById('more-btn').onclick = () => {
-            startRound(15);
+            startRound(30);
         };
     }
 }

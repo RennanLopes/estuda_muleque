@@ -8,7 +8,7 @@ O **Estuda Muleque** foi criado para transformar o tempo de tela em uma oportuni
 ## Como funciona?
 - O programa abre automaticamente quando o usuário faz login no Windows.
 - Ele entra em modo tela cheia e fica "sempre no topo", impedindo o acesso a outros programas.
-- O seu filho deve responder 20 perguntas de múltipla escolha.
+- O seu filho deve responder 30 perguntas de múltipla escolha.
 - As matérias incluem: Matemática, Ciências, História, Inglês e Curiosidades.
 - O computador só é liberado após a conclusão do desafio.
 
